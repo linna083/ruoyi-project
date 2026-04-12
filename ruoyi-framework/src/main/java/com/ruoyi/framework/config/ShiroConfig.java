@@ -313,6 +313,7 @@ public class ShiroConfig
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/ruoyi/**", "anon");
         filterChainDefinitionMap.put("/sanjiang/**", "anon");
+        filterChainDefinitionMap.put("/book/**", "anon");
         filterChainDefinitionMap.put("/captcha/captchaImage**", "anon");
         filterChainDefinitionMap.put("/captchaImage**", "anon");
         // 退出 logout地址，shiro去清除session

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.book.mapper.BookTypeMapper">
+    
+    <resultMap type="BookType" id="BookTypeResult">
+        <result property="typeId"    column="type_id"    />
+        <result property="typeName"    column="type_name"    />
+    </resultMap>
+
+    <resultMap id="BookTypeBookResult" type="BookType" extends="BookTypeResult">
+        <collection property="bookList" ofType="Book" column="type_id" select="selectBookList" />
+    </resultMap>
+
+    <resultMap type="Book" id="BookResult">
+        <result property="bookId"    column="book_id"    />
+        <result property="bookName"    column="book_name"    />
+        <result property="bookAuthor"    column="book_author"    />
+        <result property="bookImage"    column="book_image"    />
+        <result property="typeId"    column="type_id"    />
+    </resultMap>
+
+    <sql id="selectBookTypeVo">
+        select type_id, type_name from book_type
+    </sql>
+
+    <select id="selectBookTypeList" parameterType="BookType" resultMap="BookTypeResult">
+        <include refid="selectBookTypeVo"/>
+        <where>  
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectBookTypeByTypeId" parameterType="Long" resultMap="BookTypeBookResult">
+        select type_id, type_name
+        from book_type
+        where type_id = #{typeId}
+    </select>
+
+    <select id="selectBookList" resultMap="BookResult">
+        select book_id, book_name, book_author, book_image, type_id
+        from book
+        where type_id = #{type_id}
+    </select>
+
+    <insert id="insertBookType" parameterType="BookType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into book_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">type_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">#{typeName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBookType" parameterType="BookType">
+        update book_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeName != null and typeName != ''">type_name = #{typeName},</if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteBookTypeByTypeId" parameterType="Long">
+        delete from book_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteBookTypeByTypeIds" parameterType="String">
+        delete from book_type where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteBookByTypeIds" parameterType="String">
+        delete from book where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBookByTypeId" parameterType="Long">
+        delete from book where type_id = #{typeId}
+    </delete>
+
+    <insert id="batchBook">
+        insert into book( book_id, book_name, book_author, book_image, type_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.bookId}, #{item.bookName}, #{item.bookAuthor}, #{item.bookImage}, #{item.typeId})
+        </foreach>
+    </insert>
+
+</mapper>
