@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.dept.mapper.DeptMapper">
+    
+    <resultMap type="Dept" id="DeptResult">
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectDeptVo">
+        select dept_id, dept_name, create_by from dept
+    </sql>
+
+    <select id="selectDeptList" parameterType="Dept" resultMap="DeptResult">
+        <include refid="selectDeptVo"/>
+        <where>  
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')and </if>
+             (
+             #{params.adminFlag}=true
+             OR dept.create_by=#{params.userName}
+            )
+
+        </where>
+    </select>
+    
+    <select id="selectDeptByDeptId" parameterType="Long" resultMap="DeptResult">
+        <include refid="selectDeptVo"/>
+        where dept_id = #{deptId}
+    </select>
+
+    <insert id="insertDept" parameterType="Dept" useGeneratedKeys="true" keyProperty="deptId">
+        insert into dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deptName != null and deptName != ''">dept_name,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deptName != null and deptName != ''">#{deptName},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDept" parameterType="Dept">
+        update dept
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+        </trim>
+        where dept_id = #{deptId}
+    </update>
+
+    <delete id="deleteDeptByDeptId" parameterType="Long">
+        delete from dept where dept_id = #{deptId}
+    </delete>
+
+    <delete id="deleteDeptByDeptIds" parameterType="String">
+        delete from dept where dept_id in 
+        <foreach item="deptId" collection="array" open="(" separator="," close=")">
+            #{deptId}
+        </foreach>
+    </delete>
+</mapper>

@@ -2,12 +2,13 @@ package com.ruoyi.book.mapper;
 
 import java.util.List;
 import com.ruoyi.book.domain.Book;
+import com.ruoyi.book.domain.BookAll;
 
 /**
  * 图书信息Mapper接口
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 public interface BookMapper 
 {
@@ -57,5 +58,7 @@ public interface BookMapper
      * @param bookIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteBookByBookIds(String[] bookIds);
+    public int deleteBookByBookIds(Long[] bookIds);
+
+    public List<BookAll> getBookAllInfo(Book book);
 }

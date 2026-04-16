@@ -64,4 +64,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+
+    <select id="selectUserByUserName" parameterType="String" resultMap="TbUserResult">
+       select * from tb_user where name =#{name}
+    </select>
 </mapper>

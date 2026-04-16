@@ -1,12 +1,14 @@
 package com.ruoyi.user.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.user.domain.TbUser;
 
 /**
  * 用户信息Service接口
  * 
- * @author linna
+ * @author test
  * @date 2026-03-17
  */
 public interface ITbUserService 
@@ -18,6 +20,8 @@ public interface ITbUserService
      * @return 用户信息
      */
     public TbUser selectTbUserById(Long id);
+
+    public String importUser(List<TbUser> userList, Boolean isUpdateSupport, String operName);
 
     /**
      * 查询用户信息列表
@@ -49,7 +53,7 @@ public interface ITbUserService
      * @param ids 需要删除的用户信息主键集合
      * @return 结果
      */
-    public int deleteTbUserByIds(String ids);
+    public int deleteTbUserByIds(Long[] ids);
 
     /**
      * 删除用户信息信息

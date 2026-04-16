@@ -7,7 +7,7 @@ import com.ruoyi.book.domain.BookType;
  * 图书类型Service接口
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 public interface IBookTypeService 
 {
@@ -49,7 +49,7 @@ public interface IBookTypeService
      * @param typeIds 需要删除的图书类型主键集合
      * @return 结果
      */
-    public int deleteBookTypeByTypeIds(String typeIds);
+    public int deleteBookTypeByTypeIds(Long[] typeIds);
 
     /**
      * 删除图书类型信息

@@ -1,18 +1,19 @@
 package com.ruoyi.book.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.book.domain.BookAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.book.mapper.BookMapper;
 import com.ruoyi.book.domain.Book;
 import com.ruoyi.book.service.IBookService;
-import com.ruoyi.common.core.text.Convert;
 
 /**
  * 图书信息Service业务层处理
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 @Service
 public class BookServiceImpl implements IBookService 
@@ -75,9 +76,9 @@ public class BookServiceImpl implements IBookService
      * @return 结果
      */
     @Override
-    public int deleteBookByBookIds(String bookIds)
+    public int deleteBookByBookIds(Long[] bookIds)
     {
-        return bookMapper.deleteBookByBookIds(Convert.toStrArray(bookIds));
+        return bookMapper.deleteBookByBookIds(bookIds);
     }
 
     /**
@@ -91,4 +92,10 @@ public class BookServiceImpl implements IBookService
     {
         return bookMapper.deleteBookByBookId(bookId);
     }
+
+    public List<BookAll> getBookAllInfo(Book book) {
+        return bookMapper.getBookAllInfo(book);
+
+    }
+
 }

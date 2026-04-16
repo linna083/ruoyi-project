@@ -8,7 +8,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 用户信息对象 tb_user
  * 
- * @author linna
+ * @author test
  * @date 2026-03-17
  */
 public class TbUser extends BaseEntity
@@ -23,7 +23,7 @@ public class TbUser extends BaseEntity
     private String name;
 
     /** 学历 */
-    @Excel(name = "学历")
+    @Excel(name = "学历",dictType = "user_edu")
     private String education;
 
     /** 年龄 */

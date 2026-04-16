@@ -97,7 +97,7 @@ const loading = ref(false)
 // 验证码开关
 const captchaEnabled = ref(true)
 // 注册开关
-const register = ref(false)
+const register = ref(true)
 const redirect = ref(undefined)
 
 watch(route, (newRoute) => {
@@ -120,7 +120,6 @@ function handleLogin() {
         Cookies.remove("rememberMe")
       }
       // 调用action的登录方法
-      loginForm.value.rememberMe = !!loginForm.value.rememberMe;
       userStore.login(loginForm.value).then(() => {
         const query = route.query
         const otherQueryParams = Object.keys(query).reduce((acc, cur) => {
@@ -172,7 +171,7 @@ getCookie()
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  background-image: url("../assets/images/xinchenhua.jpg");
   background-size: cover;
 }
 .title {

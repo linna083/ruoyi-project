@@ -90,5 +90,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ( #{item.bookId}, #{item.bookName}, #{item.bookAuthor}, #{item.bookImage}, #{item.typeId})
         </foreach>
     </insert>
-
 </mapper>

@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 图书类型对象 book_type
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 public class BookType extends BaseEntity
 {

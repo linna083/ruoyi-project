@@ -1,6 +1,9 @@
 package com.ruoyi.book.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.system.mapper.SysDictDataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -10,13 +13,12 @@ import com.ruoyi.book.domain.Book;
 import com.ruoyi.book.mapper.BookTypeMapper;
 import com.ruoyi.book.domain.BookType;
 import com.ruoyi.book.service.IBookTypeService;
-import com.ruoyi.common.core.text.Convert;
 
 /**
  * 图书类型Service业务层处理
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 @Service
 public class BookTypeServiceImpl implements IBookTypeService 
@@ -54,14 +56,14 @@ public class BookTypeServiceImpl implements IBookTypeService
      * @param bookType 图书类型
      * @return 结果
      */
-    @Transactional
-    @Override
-    public int insertBookType(BookType bookType)
-    {
-        int rows = bookTypeMapper.insertBookType(bookType);
-        insertBook(bookType);
-        return rows;
-    }
+   // @Transactional
+   // @Override
+  //  public int insertBookType(BookType bookType)
+   // {
+   //     int rows = bookTypeMapper.insertBookType(bookType);
+   //     insertBook(bookType);
+  //      return rows;
+  //  }
 
     /**
      * 修改图书类型
@@ -69,14 +71,14 @@ public class BookTypeServiceImpl implements IBookTypeService
      * @param bookType 图书类型
      * @return 结果
      */
-    @Transactional
-    @Override
-    public int updateBookType(BookType bookType)
-    {
-        bookTypeMapper.deleteBookByTypeId(bookType.getTypeId());
-        insertBook(bookType);
-        return bookTypeMapper.updateBookType(bookType);
-    }
+  //  @Transactional
+    //@Override
+   // public int updateBookType(BookType bookType)
+   // {
+   //     bookTypeMapper.deleteBookByTypeId(bookType.getTypeId());
+   //     insertBook(bookType);
+   //     return bookTypeMapper.updateBookType(bookType);
+  //  }
 
     /**
      * 批量删除图书类型
@@ -86,10 +88,10 @@ public class BookTypeServiceImpl implements IBookTypeService
      */
     @Transactional
     @Override
-    public int deleteBookTypeByTypeIds(String typeIds)
+    public int deleteBookTypeByTypeIds(Long[] typeIds)
     {
-        bookTypeMapper.deleteBookByTypeIds(Convert.toStrArray(typeIds));
-        return bookTypeMapper.deleteBookTypeByTypeIds(Convert.toStrArray(typeIds));
+        bookTypeMapper.deleteBookByTypeIds(typeIds);
+        return bookTypeMapper.deleteBookTypeByTypeIds(typeIds);
     }
 
     /**
@@ -128,5 +130,51 @@ public class BookTypeServiceImpl implements IBookTypeService
                 bookTypeMapper.batchBook(list);
             }
         }
+    }
+
+    @Autowired
+    private SysDictDataMapper dictDataMapper;
+
+
+    private void syncTypeToDict(){
+        List<BookType> bookTypeList = bookTypeMapper.selectBookTypeList(new BookType());
+
+        dictDataMapper.deleteDictDataByType("book_type");
+
+        for (BookType type:bookTypeList){
+            SysDictData dict=new SysDictData();
+            dict.setDictType("book_type");
+            dict.setDictLabel(type.getTypeName());
+            dict.setDictValue(type.getTypeId().toString());
+            dict.setStatus("0");
+            dictDataMapper.insertDictData(dict);
+
+        }
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int insertBookType(BookType bookType)
+    {
+        int rows = bookTypeMapper.insertBookType(bookType);
+
+        syncTypeToDict();
+        return rows;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public int updateBookType(BookType bookType)
+    {
+        int rows = bookTypeMapper.updateBookType(bookType);
+
+        syncTypeToDict();
+        return rows;
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteBookType(Long[] ids)
+    {
+        int rows = bookTypeMapper.deleteBookByTypeIds(ids);
+
+        syncTypeToDict();
+        return rows;
     }
 }

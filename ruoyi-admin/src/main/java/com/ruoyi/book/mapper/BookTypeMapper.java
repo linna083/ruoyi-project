@@ -8,7 +8,7 @@ import com.ruoyi.book.domain.Book;
  * 图书类型Mapper接口
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 public interface BookTypeMapper 
 {
@@ -58,7 +58,7 @@ public interface BookTypeMapper
      * @param typeIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteBookTypeByTypeIds(String[] typeIds);
+    public int deleteBookTypeByTypeIds(Long[] typeIds);
 
     /**
      * 批量删除图书信息
@@ -66,7 +66,7 @@ public interface BookTypeMapper
      * @param typeIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteBookByTypeIds(String[] typeIds);
+    public int deleteBookByTypeIds(Long[] typeIds);
     
     /**
      * 批量新增图书信息

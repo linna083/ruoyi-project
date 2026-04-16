@@ -2,12 +2,13 @@ package com.ruoyi.book.service;
 
 import java.util.List;
 import com.ruoyi.book.domain.Book;
+import com.ruoyi.book.domain.BookAll;
 
 /**
  * 图书信息Service接口
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 public interface IBookService 
 {
@@ -49,7 +50,7 @@ public interface IBookService
      * @param bookIds 需要删除的图书信息主键集合
      * @return 结果
      */
-    public int deleteBookByBookIds(String bookIds);
+    public int deleteBookByBookIds(Long[] bookIds);
 
     /**
      * 删除图书信息信息
@@ -58,4 +59,6 @@ public interface IBookService
      * @return 结果
      */
     public int deleteBookByBookId(Long bookId);
+
+    public List<BookAll> getBookAllInfo(Book book);
 }

@@ -69,4 +69,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="getBookAllInfo" resultType="com.ruoyi.book.domain.BookAll">
+        select book.*,book_type.type_name from book,book_type
+        <where>
+            book.type_id=book_type.type_id
+            <if test="bookName != null  and bookName != ''"> and book_name like concat('%', #{bookName}, '%')</if>
+            <if test="bookAuthor != null  and bookAuthor != ''"> and book_author = #{bookAuthor}</if>
+            <if test="bookImage != null  and bookImage != ''"> and book_image = #{bookImage}</if>
+            <if test="typeId != null "> and book.type_id = #{typeId}</if>
+        </where>
+    </select>
 </mapper>

@@ -6,7 +6,7 @@ import com.ruoyi.user.domain.TbUser;
 /**
  * 用户信息Mapper接口
  * 
- * @author linna
+ * @author test
  * @date 2026-03-17
  */
 public interface TbUserMapper 
@@ -57,5 +57,7 @@ public interface TbUserMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteTbUserByIds(String[] ids);
+    public int deleteTbUserByIds(Long[] ids);
+
+    TbUser selectUserByUserName(String name);
 }

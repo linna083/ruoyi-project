@@ -1,21 +1,23 @@
 package com.ruoyi.book.controller;
 
 import java.util.List;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.book.domain.BookType;
 import com.ruoyi.book.service.IBookTypeService;
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -23,30 +25,20 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 图书类型Controller
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
-@Controller
+@RestController
 @RequestMapping("/book/type")
 public class BookTypeController extends BaseController
 {
-    private String prefix = "book/type";
-
     @Autowired
     private IBookTypeService bookTypeService;
-
-    @RequiresPermissions("book:type:view")
-    @GetMapping()
-    public String type()
-    {
-        return prefix + "/type";
-    }
 
     /**
      * 查询图书类型列表
      */
-    @RequiresPermissions("book:type:list")
-    @PostMapping("/list")
-    @ResponseBody
+    @PreAuthorize("@ss.hasPermi('book:type:list')")
+    @GetMapping("/list")
     public TableDataInfo list(BookType bookType)
     {
         startPage();
@@ -57,35 +49,33 @@ public class BookTypeController extends BaseController
     /**
      * 导出图书类型列表
      */
-    @RequiresPermissions("book:type:export")
+    @PreAuthorize("@ss.hasPermi('book:type:export')")
     @Log(title = "图书类型", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    @ResponseBody
-    public AjaxResult export(BookType bookType)
+    public void export(HttpServletResponse response, BookType bookType)
     {
         List<BookType> list = bookTypeService.selectBookTypeList(bookType);
         ExcelUtil<BookType> util = new ExcelUtil<BookType>(BookType.class);
-        return util.exportExcel(list, "图书类型数据");
+        util.exportExcel(response, list, "图书类型数据");
+    }
+
+    /**
+     * 获取图书类型详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('book:type:query')")
+    @GetMapping(value = "/{typeId}")
+    public AjaxResult getInfo(@PathVariable("typeId") Long typeId)
+    {
+        return success(bookTypeService.selectBookTypeByTypeId(typeId));
     }
 
     /**
      * 新增图书类型
      */
-    @RequiresPermissions("book:type:add")
-    @GetMapping("/add")
-    public String add()
-    {
-        return prefix + "/add";
-    }
-
-    /**
-     * 新增保存图书类型
-     */
-    @RequiresPermissions("book:type:add")
+    @PreAuthorize("@ss.hasPermi('book:type:add')")
     @Log(title = "图书类型", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
-    @ResponseBody
-    public AjaxResult addSave(BookType bookType)
+    @PostMapping
+    public AjaxResult add(@RequestBody BookType bookType)
     {
         return toAjax(bookTypeService.insertBookType(bookType));
     }
@@ -93,23 +83,10 @@ public class BookTypeController extends BaseController
     /**
      * 修改图书类型
      */
-    @RequiresPermissions("book:type:edit")
-    @GetMapping("/edit/{typeId}")
-    public String edit(@PathVariable("typeId") Long typeId, ModelMap mmap)
-    {
-        BookType bookType = bookTypeService.selectBookTypeByTypeId(typeId);
-        mmap.put("bookType", bookType);
-        return prefix + "/edit";
-    }
-
-    /**
-     * 修改保存图书类型
-     */
-    @RequiresPermissions("book:type:edit")
+    @PreAuthorize("@ss.hasPermi('book:type:edit')")
     @Log(title = "图书类型", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(BookType bookType)
+    @PutMapping
+    public AjaxResult edit(@RequestBody BookType bookType)
     {
         return toAjax(bookTypeService.updateBookType(bookType));
     }
@@ -117,12 +94,11 @@ public class BookTypeController extends BaseController
     /**
      * 删除图书类型
      */
-    @RequiresPermissions("book:type:remove")
+    @PreAuthorize("@ss.hasPermi('book:type:remove')")
     @Log(title = "图书类型", businessType = BusinessType.DELETE)
-    @PostMapping( "/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids)
+	@DeleteMapping("/{typeIds}")
+    public AjaxResult remove(@PathVariable Long[] typeIds)
     {
-        return toAjax(bookTypeService.deleteBookTypeByTypeIds(ids));
+        return toAjax(bookTypeService.deleteBookTypeByTypeIds(typeIds));
     }
 }

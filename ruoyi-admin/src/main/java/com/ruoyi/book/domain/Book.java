@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 图书信息对象 book
  * 
  * @author linna
- * @date 2026-03-24
+ * @date 2026-04-11
  */
 public class Book extends BaseEntity
 {
@@ -43,7 +43,6 @@ public class Book extends BaseEntity
     {
         return bookId;
     }
-
     public void setBookName(String bookName) 
     {
         this.bookName = bookName;
@@ -53,7 +52,6 @@ public class Book extends BaseEntity
     {
         return bookName;
     }
-
     public void setBookAuthor(String bookAuthor) 
     {
         this.bookAuthor = bookAuthor;
@@ -63,7 +61,6 @@ public class Book extends BaseEntity
     {
         return bookAuthor;
     }
-
     public void setBookImage(String bookImage) 
     {
         this.bookImage = bookImage;
@@ -73,7 +70,6 @@ public class Book extends BaseEntity
     {
         return bookImage;
     }
-
     public void setTypeId(Long typeId) 
     {
         this.typeId = typeId;
